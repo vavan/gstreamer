@@ -1,4 +1,4 @@
-package com.gst_sdk_tutorials.tutorial_5;
+package com.limelab.video;
 
 import android.content.Context;
 import android.util.AttributeSet;

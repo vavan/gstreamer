@@ -1,4 +1,4 @@
-package com.gst_sdk_tutorials.tutorial_5;
+package com.limelab.video;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import org.freedesktop.gstreamer.GStreamer;
 
-public class Tutorial5 extends Activity implements SurfaceHolder.Callback {
+public class Video extends Activity implements SurfaceHolder.Callback {
     private native void nativeInit();     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
     private native void nativePlay();     // Set pipeline to PLAYING
