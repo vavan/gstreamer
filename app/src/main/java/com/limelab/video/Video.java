@@ -120,7 +120,7 @@ public class Video extends Activity implements SurfaceHolder.Callback {
 
     static {
         System.loadLibrary("gstreamer_android");
-        System.loadLibrary("tutorial-5");
+        System.loadLibrary("video-jni");
         nativeClassInit();
     }
 
