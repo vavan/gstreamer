@@ -4,9 +4,16 @@
 #include <string.h>
 #include <stdio.h>
 
+#define MAX_STRING 1024
+
+char video_uri[MAX_STRING];
+char image_uri[MAX_STRING];
+
+
 GstElement *video_pipeline;
 GstElement *image_pipeline;
 void *gst_thread(void *threadid);
+
 
 
 typedef struct _CustomData {
@@ -90,10 +97,26 @@ void *gst_thread(void *threadid)
 	
 	
 	/* Build the pipeline */
-	video_pipeline = gst_parse_launch ("autovideosrc ! video/x-raw, width=640, height=480, framerate=30/1 ! queue ! x264enc  bitrate=2000 tune=zerolatency speed-preset=ultrafast \
-    ! queue ! rtph264pay ! udpsink host=127.0.0.1 port=5000 sync=false"	, NULL);
+        video_pipeline = gst_parse_launch (video_uri, NULL);
+
+        image_pipeline = gst_parse_launch (image_uri, NULL);
+
+
+
+
+/*
+	video_pipeline = gst_parse_launch ("imxv4l2src device=/dev/video0 capture-mode=0 fps-n=30 queue-size=7 \
+                                          ! vpuenc codec=6 bitrate=900000 \
+                                          ! rtph264pay config-interval=10 pt=26 \
+                                          ! udpsink host=192.168.5.20 port=5000 sync=false", NULL);
     
-	image_pipeline = gst_parse_launch ("v4l2src num-buffers=1 ! image/jpeg,width=1280,height=720  ! filesink location=test01.jpg", NULL);
+
+	image_pipeline = gst_parse_launch ("mxv4l2src device=/dev/video0 capture-mode=4 num-buffers=1 \
+                                          ! jpegenc \
+                                          ! filesink location=test_image.jpeg", NULL);
+
+*/
+
 	bus = gst_element_get_bus (video_pipeline);
 
 	/* Start playing */
