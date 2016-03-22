@@ -2,14 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gst/gst.h>
-
-
-void *gst_thread(void *threadid);
-
-extern GstElement *video_pipeline;
-extern GstElement *image_pipeline;
-extern char *video_uri;
-extern char *image_uri;
+#include <string.h>
+#include "gst_thread.h"
 
 
 int main(int argc, char *argv[])

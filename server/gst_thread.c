@@ -3,16 +3,10 @@
 #include <gst/gst.h>
 #include <string.h>
 #include <stdio.h>
-
-#define MAX_STRING 1024
+#include "gst_thread.h"
 
 char video_uri[MAX_STRING];
 char image_uri[MAX_STRING];
-
-
-GstElement *video_pipeline;
-GstElement *image_pipeline;
-void *gst_thread(void *threadid);
 
 
 
@@ -97,6 +91,10 @@ void *gst_thread(void *threadid)
 	
 	
 	/* Build the pipeline */
+
+	printf("Video: %s\n", video_uri);
+	printf("Image: %s\n", image_uri);
+
         video_pipeline = gst_parse_launch (video_uri, NULL);
 
         image_pipeline = gst_parse_launch (image_uri, NULL);
