@@ -122,6 +122,12 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
   }
 }
 
+/* Called when the clock is lost */
+static void clock_lost_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
+  gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
+  gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
+}
+
 /* Check if all conditions are met to report GStreamer as initialized.
  * These conditions will change depending on the application */
 static void check_initialization_complete (CustomData *data) {
@@ -157,13 +163,20 @@ static void *app_function (void *userdata) {
 
   /* Build pipeline */
 //  data->pipeline = gst_parse_launch("videotestsrc ! autovideosink", &error);
+
+  data->pipeline = gst_parse_launch("udpsrc port=5000 \
+      caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264\" \
+      ! decodebin \
+      ! autovideosink sync=false", &error);
+
+/*
   data->pipeline = gst_parse_launch("udpsrc port=5000 \
       caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, sprop-parameter-sets=(string)\\\"Z0JAHqaAoD2QAA\\\\=\\\\=\\\\,aM44gAA\\\\=\\\", payload=(int)96\" \
       ! rtph264depay \
       ! queue \
       ! avdec_h264 \
       ! autovideosink sync=false", &error);
-
+*/
 
   if (error) {
     gchar *message = g_strdup_printf("Unable to build pipeline: %s", error->message);
@@ -190,6 +203,7 @@ static void *app_function (void *userdata) {
   g_source_unref (bus_source);
   g_signal_connect (G_OBJECT (bus), "message::error", (GCallback)error_cb, data);
   g_signal_connect (G_OBJECT (bus), "message::state-changed", (GCallback)state_changed_cb, data);
+  g_signal_connect (G_OBJECT (bus), "message::clock-lost", (GCallback)clock_lost_cb, data);
   gst_object_unref (bus);
 
   /* Create a GLib Main Loop and set it to run */
