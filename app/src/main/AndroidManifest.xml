@@ -15,10 +15,13 @@
 
     <application
         android:icon="@drawable/gst_sdk_icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
         <activity
             android:name="com.limelab.video.Video"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

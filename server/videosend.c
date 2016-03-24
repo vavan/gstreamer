@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
 	sprintf(video_uri,
 			"autovideosrc ! video/x-raw, width=640, height=480, framerate=30/1"
 			" ! queue ! x264enc  bitrate=2000 tune=zerolatency speed-preset=ultrafast"
-		    " ! queue ! rtph264pay ! udpsink host=127.0.0.1 port=5000 sync=false");
+		    " ! queue ! rtph264pay ! udpsink host=%s port=5000 sync=false", client_ip);
 
 	sprintf(image_uri,
 			"v4l2src num-buffers=1 ! image/jpeg,width=1280,height=720  ! filesink location=output.jpeg");

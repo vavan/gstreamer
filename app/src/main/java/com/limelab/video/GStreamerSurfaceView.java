@@ -79,6 +79,7 @@ public class GStreamerSurfaceView extends SurfaceView {
         // Obey minimum size
         width = Math.max (getSuggestedMinimumWidth(), width);
         height = Math.max (getSuggestedMinimumHeight(), height);
+        Log.i ("GStreamer", "onMeasure final " + width + "x" + height);
         setMeasuredDimension(width, height);
     }
 

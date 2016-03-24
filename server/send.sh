@@ -5,7 +5,7 @@ gst-launch-1.0 \
     ! x264enc  bitrate=2000 tune=zerolatency speed-preset=ultrafast \
     ! queue \
     ! rtph264pay \
-    ! udpsink host=192.168.0.116 port=5000 sync=false
+    ! udpsink host=192.168.0.117 port=5000 sync=false
 
 
 #    ! autovideosink sync=false
