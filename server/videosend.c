@@ -13,9 +13,8 @@
 
 #define INPUT_DEVICE "/dev/input/event3"
 #define EVENT_BUFFER_SIZE 128
-#define GST_TRANSITION_TIMEOUT_NS 1000000000
-#define SHUTTER_BUTTON_CODE 30
 
+#define HANDLE_SHUTTER
 
 
 typedef struct {
@@ -41,7 +40,7 @@ int open_shutter_button() {
 int detect_press(char *event) {
 	input_event_t *p;
 	p = (input_event_t*)event;
-	if ((p->type == 1) && (p->code == SHUTTER_BUTTON_CODE)) {
+	if ((p->type == 1) && (p->code > 0)) {
 		if (p->value == 1) {
 			return 1;
 		}
@@ -114,9 +113,12 @@ void main_loop(int fd_shutter) {
 
 		if (select(fd_shutter + 1, &fds, 0, 0, 0) == 1) {
 			int received = read(fd_shutter, buffer, EVENT_BUFFER_SIZE);
+			
+#ifdef HANDLE_SHUTTER
 			if (parse_events(buffer, received)) {
 				printf("Shutter pressed\n");
-
+				//take_shot();
+				
 				printf("Pause video\n");
 				gst_element_set_state(video_pipeline, GST_STATE_PAUSED);
 				gst_element_set_state(video_pipeline, GST_STATE_NULL);
@@ -126,15 +128,14 @@ void main_loop(int fd_shutter) {
 				gst_element_set_state(image_pipeline, GST_STATE_PAUSED);
 				gst_element_get_state (image_pipeline, NULL, NULL, GST_TRANSITION_TIMEOUT_NS);
 
-
-				sprintf(image_destination, "img%04d.jpeg", counter++);
-				cp(image_destination, "output.jpeg");
-
-
 				gst_element_set_state(image_pipeline, GST_STATE_NULL);
 				printf("Resume video\n");
 				gst_element_set_state(video_pipeline, GST_STATE_PLAYING);
+				
+				sprintf(image_destination, "img%04d.jpeg", counter++);
+				cp(image_destination, "output.jpeg");
 			}
+#endif
 		}
 	}
 }
